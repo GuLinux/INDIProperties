@@ -43,3 +43,8 @@ void Switch::fill_vector()
 		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
 		     main.group().c_str(), main.m_base_options.permissions, m_rule, main.m_base_options.timeout, main.m_base_options.state);
 }
+
+void Switch::do_register() const
+{
+  main.m_device->defineSwitch(&main.m_vector_property);
+}

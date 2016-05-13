@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <indiapi.h>
+#include <defaultdevice.h>
 
 namespace INDI {
 namespace Properties {
@@ -38,13 +39,30 @@ namespace Properties {
       double timeout = 60.;
     };
     template<typename ... Args>
-    Property(const BaseOptions &base_options, Args ... args) : m_property_wrapper{*this, args...}, m_base_options{base_options} {}
+    Property(INDI::DefaultDevice *device, const BaseOptions &base_options, Args ... args) 
+      : m_device{device}, m_property_wrapper{*this, args...}, m_base_options{base_options} 
+    {
+      if(m_device)
+	m_property_wrapper.do_register();
+    }
+    
+    ~Property() {
+      unregister();
+    }
+    
+    void unregister() {
+      if(m_device)
+	m_device->removeProperty(m_base_options.name.c_str(), nullptr);
+    }
     std::string name() const { return m_base_options.name; }
     std::string device() const { return m_base_options.device; }
     std::string label() const { return m_base_options.label; }
     std::string group() const { return m_base_options.group; }
     
     std::vector<single_property> properties() const { return m_properties; }
+    
+    T &operator*() { return m_property_wrapper; }
+    T &get() { return **this; }
     
     vector_property_t &vector_property() { return m_vector_property; }
     template<typename ... Args> void add(Args ... args) {
@@ -57,6 +75,7 @@ namespace Properties {
     BaseOptions m_base_options;
     std::vector<single_property> m_properties;
     vector_property_t m_vector_property;
+    INDI::DefaultDevice *m_device;
   };
 }
 }
