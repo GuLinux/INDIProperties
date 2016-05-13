@@ -40,6 +40,6 @@ Switch::single_property Switch::new_property(const string& name, const string& l
 void Switch::fill_vector()
 {
   IUFillSwitchVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
-		     main.m_device.c_str(), main.m_name.c_str(), main.m_label.c_str(),
-		     main.m_group.c_str(), IP_RO, m_rule, 60, IPS_OK);
+		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
+		     main.group().c_str(), main.m_base_options.permissions, m_rule, main.m_base_options.timeout, main.m_base_options.state);
 }

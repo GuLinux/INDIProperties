@@ -21,6 +21,7 @@
 
 #include <string>
 #include <vector>
+#include <indiapi.h>
 
 namespace INDI {
 namespace Properties {
@@ -30,26 +31,32 @@ namespace Properties {
     typedef typename T::single_property single_property;
     friend T;
   public:
+    struct BaseOptions {
+      std::string name, device, label, group;
+      IPerm permissions = IP_RW;
+      IPState state = IPS_OK;
+      double timeout = 60.;
+    };
     template<typename ... Args>
-    Property(Args ... args) : m_property_wrapper{*this, args...} {}
-    std::string name() const { return m_name; }
-    std::string device() const { return m_device; }
-    std::string label() const { return m_label; }
-    std::string group() const { return m_group; }
+    Property(const BaseOptions &base_options, Args ... args) : m_property_wrapper{*this, args...}, m_base_options{base_options} {}
+    std::string name() const { return m_base_options.name; }
+    std::string device() const { return m_base_options.device; }
+    std::string label() const { return m_base_options.label; }
+    std::string group() const { return m_base_options.group; }
+    
     std::vector<single_property> properties() const { return m_properties; }
+    
     vector_property_t &vector_property() { return m_vector_property; }
     template<typename ... Args> void add(Args ... args) {
       m_properties.push_back(m_property_wrapper.new_property(args...));
       m_property_wrapper.fill_vector();
     }
+    
   private:
-    const std::string m_device;
-    const std::string m_name;
-    const std::string m_label;
-    const std::string m_group;
+    T m_property_wrapper;
+    BaseOptions m_base_options;
     std::vector<single_property> m_properties;
     vector_property_t m_vector_property;
-    T m_property_wrapper;
   };
 }
 }

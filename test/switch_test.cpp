@@ -5,7 +5,7 @@
 using namespace INDI::Properties;
 using namespace std;
 TEST(INDISwitch, AddProperty) {
-  Property<Switch> my_prop{ISR_1OFMANY};
+  Property<Switch> my_prop{{}, ISR_1OFMANY};
   my_prop.add("prop name", "prop label", ISS_ON);
   my_prop.add("prop name2", "prop label2", ISS_OFF);
   ASSERT_EQ(2, my_prop.properties().size());
