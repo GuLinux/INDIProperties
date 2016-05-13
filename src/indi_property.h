@@ -26,17 +26,21 @@ namespace INDI {
 namespace Properties {
   template<typename T>
   class Property {
+    typedef typename T::vector_property vector_property_t;
+    typedef typename T::single_property single_property;
+    friend T;
   public:
-    typedef T::vector_property vector_property;
-    typedef T::single_property single_property;
+    template<typename ... Args>
+    Property(Args ... args) : m_property_wrapper{*this, args...} {}
     std::string name() const { return m_name; }
     std::string device() const { return m_device; }
-    std::string m_label() const { return m_label; }
-    std::string m_group() const { return m_group; }
-    template<typename ... Args> add(Args ... args) {
-      vector_property property;
-      T::fill_property(&args...);
-      m_properties.push_back(property);
+    std::string label() const { return m_label; }
+    std::string group() const { return m_group; }
+    std::vector<single_property> properties() const { return m_properties; }
+    vector_property_t &vector_property() { return m_vector_property; }
+    template<typename ... Args> void add(Args ... args) {
+      m_properties.push_back(m_property_wrapper.new_property(args...));
+      m_property_wrapper.fill_vector();
     }
   private:
     const std::string m_device;
@@ -44,6 +48,8 @@ namespace Properties {
     const std::string m_label;
     const std::string m_group;
     std::vector<single_property> m_properties;
+    vector_property_t m_vector_property;
+    T m_property_wrapper;
   };
 }
 }

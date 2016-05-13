@@ -17,3 +17,29 @@
 */
 
 #include "switch.h"
+#include <map>
+#include <indiproperty.h>
+
+using namespace std;
+using namespace INDI::Properties;
+
+Switch::Switch(Property<Switch>& main, ISRule rule) : main{main}, m_rule{rule}
+{
+}
+
+
+
+Switch::single_property Switch::new_property(const string& name, const string& label, ISState state)
+{
+  single_property s;
+  IUFillSwitch(&s, name.c_str(), label.c_str(), state);
+  return s;
+}
+
+
+void Switch::fill_vector()
+{
+  IUFillSwitchVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
+		     main.m_device.c_str(), main.m_name.c_str(), main.m_label.c_str(),
+		     main.m_group.c_str(), IP_RO, m_rule, 60, IPS_OK);
+}

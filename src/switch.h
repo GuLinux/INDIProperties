@@ -16,10 +16,12 @@
  *     Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 */
 
-#include <indiapi.h>
 #ifndef INDI_PROPERTIES_SWITCH_H
 #define INDI_PROPERTIES_SWITCH_H
 
+#include <indiapi.h>
+#include <string>
+#include "indi_property.h"
 namespace INDI {
 namespace Properties {
 
@@ -28,6 +30,12 @@ class Switch
 public:
   typedef ISwitchVectorProperty vector_property;
   typedef ISwitch single_property;
+  Switch(Property<Switch> &main, ISRule rule);
+  single_property new_property(const std::string& name, const std::string& label, ISState state);
+  void fill_vector();
+private:
+  Property<Switch> &main;
+  ISRule m_rule;
 };
 }
 }
