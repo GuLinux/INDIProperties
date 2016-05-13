@@ -24,19 +24,26 @@
 
 namespace INDI {
 namespace Properties {
-  template<typename VectorProperty, typename SingleProperty>
+  template<typename T>
   class Property {
   public:
+    typedef T::vector_property vector_property;
+    typedef T::single_property single_property;
     std::string name() const { return m_name; }
     std::string device() const { return m_device; }
     std::string m_label() const { return m_label; }
     std::string m_group() const { return m_group; }
+    template<typename ... Args> add(Args ... args) {
+      vector_property property;
+      T::fill_property(&args...);
+      m_properties.push_back(property);
+    }
   private:
     const std::string m_device;
     const std::string m_name;
     const std::string m_label;
     const std::string m_group;
-    std::vector<SingleProperty> m_properties;
+    std::vector<single_property> m_properties;
   };
 }
 }
