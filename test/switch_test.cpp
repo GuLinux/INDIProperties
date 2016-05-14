@@ -73,7 +73,7 @@ TEST(INDISwitch, RunOnFirst) {
   my_prop.add("prop name3", "prop label3", ISS_ON);
   my_prop.add("prop name4", "prop label4", ISS_ON);
   Switch::Entry entry;
-  (*my_prop).first_on_switch([&](const Switch::Entry &e){ entry = e; });
+  my_prop->first_on_switch([&](const Switch::Entry &e){ entry = e; });
   ASSERT_EQ(2, entry.index);
   ASSERT_STREQ("prop name3", entry.iswitch.name);
 }
@@ -85,7 +85,7 @@ TEST(INDISwitch, RunOnAll) {
   my_prop.add("prop name3", "prop label3", ISS_ON);
   my_prop.add("prop name4", "prop label4", ISS_ON);
   vector<Switch::Entry> entries;
-  (*my_prop).on_switches([&](const Switch::Entry &e){ entries.push_back( e ); });
+  my_prop->on_switches([&](const Switch::Entry &e){ entries.push_back( e ); });
   ASSERT_EQ(2, entries.size());
   ASSERT_EQ(2, entries[0].index);
   ASSERT_STREQ("prop name3", entries[0].iswitch.name);

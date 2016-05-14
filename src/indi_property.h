@@ -68,7 +68,7 @@ namespace Properties {
     
     std::vector<T_single_property> properties() const { return m_properties; }
     
-    T &operator*() { return m_property_wrapper; }
+    T *operator->() { return &m_property_wrapper; }
     T &get() { return **this; }
     
     T_vector_property &vector_property() { return m_vector_property; }
