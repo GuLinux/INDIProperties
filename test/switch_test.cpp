@@ -16,3 +16,12 @@ TEST(INDISwitch, AddProperty) {
   ASSERT_EQ(2, my_prop.vector_property().nsp);
   ASSERT_EQ(ISR_1OFMANY, my_prop.vector_property().r);
 }
+
+TEST(INDISwitch, UpdateProperty) {
+  char *names[] = {"prop name", "prop name2"};
+  ISState values[] = {ISS_OFF, ISS_ON};
+  Property<Switch> my_prop{nullptr, {"device", "name"}, ISR_1OFMANY};
+  my_prop.add("prop name", "prop label", ISS_ON);
+  my_prop.add("prop name2", "prop label2", ISS_OFF);
+  my_prop.update("device", "name", values, names, 2);
+}

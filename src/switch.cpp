@@ -19,6 +19,7 @@
 #include "switch.h"
 #include <map>
 #include <indiproperty.h>
+#include <algorithm>
 
 using namespace std;
 using namespace INDI::Properties;
@@ -42,9 +43,17 @@ void Switch::fill_vector()
   IUFillSwitchVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
 		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
 		     main.group().c_str(), main.m_base_options.permissions, m_rule, main.m_base_options.timeout, main.m_base_options.state);
+  IDSetSwitch(&main.m_vector_property, nullptr);
 }
 
 void Switch::do_register() const
 {
   main.m_device->defineSwitch(&main.m_vector_property);
 }
+
+bool Switch::update(ISState* states, char* names[], int n)
+{
+  return IUUpdateSwitch(&main.m_vector_property, states, names, n) == 0;
+}
+
+

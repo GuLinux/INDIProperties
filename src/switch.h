@@ -30,10 +30,12 @@ class Switch
 public:
   typedef ISwitchVectorProperty vector_property;
   typedef ISwitch single_property;
+  typedef ISState value_type;
   Switch(Property<Switch> &main, ISRule rule);
   single_property new_property(const std::string& name, const std::string& label, ISState state);
   void fill_vector();
   void do_register() const;
+  bool update(ISState *states, char *names[], int n);
 private:
   Property<Switch> &main;
   ISRule m_rule;
