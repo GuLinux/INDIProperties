@@ -1,5 +1,4 @@
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest")
-  include_directories(${CMAKE_SOURCE_DIR}/src)
   message("Found googletest, enabling testing")
   add_subdirectory(googletest)
   

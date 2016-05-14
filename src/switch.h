@@ -41,12 +41,11 @@ public:
   bool update(ISState *states, char *names[], int n);
   void send(const std::string &message = {});
   
-  struct Entry {int index; std::string name; };
+  struct Entry {long index; single_property iswitch; };
   typedef std::function<void(const Entry &)> RunOnSwitch;
-  typedef std::function<void(const std::vector<Entry> &)> RunOnSwitches;
   
   void first_on_switch(RunOnSwitch run_on_switch);
-  void on_switches(RunOnSwitches run_on_switches);
+  void on_switches(RunOnSwitch run_on_switches);
 private:
   Property<Switch> &main;
   ISRule m_rule;

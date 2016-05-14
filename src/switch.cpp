@@ -20,6 +20,7 @@
 #include <map>
 #include <indiproperty.h>
 #include <algorithm>
+#include "c++/containers_streams.h"
 
 using namespace std;
 using namespace INDI::Properties;
@@ -63,12 +64,23 @@ void Switch::send(const string& message)
   IDSetSwitch(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
 }
 
+bool filter_on(Switch::Entry s) { return s.iswitch.s == ISS_ON; }
+struct SwitchToEntry {
+  long index = 0;
+  Switch::Entry operator()(ISwitch s) { return {index++, s}; }
+};
+
 void Switch::first_on_switch(RunOnSwitch run_on_switch)
 {
-
+  SwitchToEntry s2e;
+  auto filtered = GuLinux::make_stream(main.m_properties).transform<vector<Entry>>(s2e).filter(filter_on).get();
+  if(filtered.size() >= 1)
+    run_on_switch(filtered[0]);
 }
 
-void Switch::on_switches(RunOnSwitches run_on_switches)
-{
 
+void Switch::on_switches(RunOnSwitch run_on_switches)
+{
+  SwitchToEntry s2e;
+  GuLinux::make_stream(main.m_properties).transform<vector<Entry>>(s2e).filter(filter_on).for_each(run_on_switches);
 }
