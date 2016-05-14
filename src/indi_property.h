@@ -36,14 +36,14 @@ namespace Properties {
     friend T;
   public:
     struct BaseOptions {
-      std::string name, device, label, group;
+      std::string device, name, label, group;
       IPerm permissions;
       IPState state;
       double timeout;
-      BaseOptions(const std::string &name = {}, const std::string &device = {}, 
+      BaseOptions(const std::string &device = {}, const std::string &name = {}, 
 		  const std::string &label = {}, const std::string &group = {}, 
 		  IPerm permissions = IP_RW, IPState state = IPS_OK, double timeout = 60.)
-	: name{name}, device{device}, label{label}, group{group}, permissions{permissions}, state{state}, timeout{timeout} {}
+	: device{device}, name{name}, label{label}, group{group}, permissions{permissions}, state{state}, timeout{timeout} {}
     };
     template<typename ... Args>
     Property(INDI::DefaultDevice *device, const BaseOptions &base_options, Args ... args) 
@@ -76,12 +76,14 @@ namespace Properties {
       m_properties.push_back(m_property_wrapper.new_property(args...));
       m_property_wrapper.fill_vector();
     }
-    
+
     template<typename ... Args>
     bool update(const std::string &device, const std::string &name, const Args... args) {
-      if(device != m_base_options.device || name != m_base_options.name)
+      if( (device != m_base_options.device || name != m_base_options.name) || ! m_property_wrapper.update(args...) )
 	return false;
-      return m_property_wrapper.update(args...);
+      m_vector_property.s = IPS_OK;
+      m_property_wrapper.send();
+      return true;
     }
   private:
     T m_property_wrapper;

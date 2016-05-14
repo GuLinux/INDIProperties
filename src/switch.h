@@ -21,6 +21,7 @@
 
 #include <indiapi.h>
 #include <string>
+#include <functional>
 #include "indi_property.h"
 namespace INDI {
 namespace Properties {
@@ -31,14 +32,25 @@ public:
   typedef ISwitchVectorProperty vector_property;
   typedef ISwitch single_property;
   typedef ISState value_type;
-  Switch(Property<Switch> &main, ISRule rule);
+  typedef std::function<bool(ISState *, char **, int)> OnUpdate;
+  
+  Switch(Property<Switch> &main, ISRule rule, OnUpdate on_update);
   single_property new_property(const std::string& name, const std::string& label, ISState state);
   void fill_vector();
   void do_register() const;
   bool update(ISState *states, char *names[], int n);
+  void send(const std::string &message = {});
+  
+  struct Entry {int index; std::string name; };
+  typedef std::function<void(const Entry &)> RunOnSwitch;
+  typedef std::function<void(const std::vector<Entry> &)> RunOnSwitches;
+  
+  void first_on_switch(RunOnSwitch run_on_switch);
+  void on_switches(RunOnSwitches run_on_switches);
 private:
   Property<Switch> &main;
   ISRule m_rule;
+  OnUpdate on_update;
 };
 }
 }

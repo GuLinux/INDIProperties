@@ -24,7 +24,7 @@
 using namespace std;
 using namespace INDI::Properties;
 
-Switch::Switch(Property<Switch>& main, ISRule rule) : main{main}, m_rule{rule}
+Switch::Switch(Property<Switch>& main, ISRule rule, OnUpdate on_update) : main{main}, m_rule{rule}, on_update{on_update}
 {
 }
 
@@ -43,17 +43,32 @@ void Switch::fill_vector()
   IUFillSwitchVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
 		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
 		     main.group().c_str(), main.m_base_options.permissions, m_rule, main.m_base_options.timeout, main.m_base_options.state);
-  IDSetSwitch(&main.m_vector_property, nullptr);
+  send();
 }
 
 void Switch::do_register() const
 {
   main.m_device->defineSwitch(&main.m_vector_property);
 }
-
 bool Switch::update(ISState* states, char* names[], int n)
 {
+  if(! on_update(states, names, n ))
+    return false;
   return IUUpdateSwitch(&main.m_vector_property, states, names, n) == 0;
 }
 
 
+void Switch::send(const string& message)
+{
+  IDSetSwitch(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+}
+
+void Switch::first_on_switch(RunOnSwitch run_on_switch)
+{
+
+}
+
+void Switch::on_switches(RunOnSwitches run_on_switches)
+{
+
+}
