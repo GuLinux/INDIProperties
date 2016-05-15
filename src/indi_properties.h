@@ -43,6 +43,12 @@ public:
     m_numbers.erase(key);
   }
   
+  void clear() {
+    m_switches.clear();
+    m_numbers.clear();
+  }
+  
+  
   Property<Switch> &switch_p(const key_type &key) { return *m_switches[key]; }
   Property<Number> &number(const key_type &key) { return *m_numbers[key]; }
   
@@ -53,6 +59,8 @@ public:
     return std::any_of(m_numbers.begin(), m_numbers.end(), [&](const std::pair<key_type, Property<Number>::ptr> &p) { return p.second->update(device, name, values, names, n); });
   }
 
+  std::unordered_map<key_type, Property<Switch>::ptr> &switches() { return m_switches; }
+  std::unordered_map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
   std::unordered_map<key_type, Property<Number>::ptr> m_numbers;

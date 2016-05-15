@@ -43,3 +43,26 @@ TEST_F(Test_INDIProperties, UpdateNumber) {
   char * texts[] = {"prop name", "prop name 2"};
   ASSERT_TRUE(properties.update("device name", "number name", new_values, texts, 2) );
 }
+
+TEST_F(Test_INDIProperties, ClearAll) {
+    properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
+	    .add("prop name", "prop label", 0, 5, 1, 0)
+	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
+  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](ISState *, char **, int){ return true; } )
+	    .add("prop name", "prop label", ISS_ON)
+	    .add("prop name 2", "prop label 2", ISS_OFF);
+    ASSERT_EQ(1, properties.numbers().size());
+    ASSERT_EQ(1, properties.switches().size());
+    properties.clear();
+    ASSERT_EQ(0, properties.numbers().size());
+    ASSERT_EQ(0, properties.switches().size());
+}
+
+
+TEST_F(Test_INDIProperties, Clear) {
+    properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
+	    .add("prop name", "prop label", 0, 5, 1, 0)
+	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
+    properties.numbers().clear();
+    ASSERT_EQ(0, properties.numbers().size());
+}

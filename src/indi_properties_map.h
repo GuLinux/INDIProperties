@@ -1,0 +1,45 @@
+/*
+    Copyright (C) 2016 Marco Gulino (marco AT gulinux.net)
+
+    This library is free software; you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation; either version 2.1 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+    License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
+*/
+
+#ifndef INDI_PROPERTIES_LIB_INDI_PROPERTIES_MAP
+#define INDI_PROPERTIES_LIB_INDI_PROPERTIES_MAP
+
+#include <map>
+#include <unordered_map>
+#include <string>
+#include <functional>
+#include "c++/containers_streams.h"
+#include <algorithm>
+#include "indi_properties.h"
+
+namespace INDI {
+namespace Properties {
+template<typename key_type = std::string>
+class PropertiesMap {
+public:
+  typedef std::pair<key_type, Properties<key_type>> each;
+  Properties<key_type> &operator[](const key_type &key) { return m_map[key]; }
+  void clear() { for(auto &e: m_map) e.second.clear(); }
+  void clear(const key_type &key) { m_map[key].clear(); }
+private:
+  std::unordered_map<key_type, Properties<key_type>> m_map;
+};
+}
+}
+
+#endif
