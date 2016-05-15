@@ -35,15 +35,16 @@ namespace Properties {
     typedef typename T::value_type T_value_type;
     friend T;
   public:
+    typedef std::shared_ptr<Property<T>> ptr;
     struct BaseOptions {
       std::string device, name, label, group;
       IPerm permissions;
       IPState state;
       double timeout;
       BaseOptions(const std::string &device = {}, const std::string &name = {}, 
-		  const std::string &label = {}, const std::string &group = {}, 
-		  IPerm permissions = IP_RW, IPState state = IPS_OK, double timeout = 60.)
-	: device{device}, name{name}, label{label}, group{group}, permissions{permissions}, state{state}, timeout{timeout} {}
+        const std::string &label = {}, const std::string &group = {},
+        IPerm permissions = IP_RW, IPState state = IPS_OK, double timeout = 60.)
+        : device{device}, name{name}, label{label}, group{group}, permissions{permissions}, state{state}, timeout{timeout} {}
     };
     template<typename ... Args>
     Property(INDI::DefaultDevice *device, const BaseOptions &base_options, Args ... args) 
@@ -59,7 +60,7 @@ namespace Properties {
     
     void unregister() {
       if(m_device /* && m_device->getProperty(m_base_options.name.c_str()) TODO: test this */)
-	m_device->removeProperty(m_base_options.name.c_str(), nullptr);
+        m_device->removeProperty(m_base_options.name.c_str(), nullptr);
     }
     std::string name() const { return m_base_options.name; }
     std::string device() const { return m_base_options.device; }
@@ -72,9 +73,10 @@ namespace Properties {
     T &get() { return **this; }
     
     T_vector_property &vector_property() { return m_vector_property; }
-    template<typename ... Args> void add(Args ... args) {
+    template<typename ... Args> Property<T> &add(Args ... args) {
       m_properties.push_back(m_property_wrapper.new_property(args...));
       m_property_wrapper.fill_vector();
+      return *this;
     }
 
     template<typename ... Args>

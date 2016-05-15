@@ -5,4 +5,8 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest")
   add_executable(switch_test switch_test.cpp)
   target_link_libraries(switch_test indi_properties gtest_main indidriver)
   add_test(switch_test switch_test)
+
+  add_executable(properties_test properties_test.cpp)
+  target_link_libraries(properties_test indi_properties gtest_main indidriver)
+  add_test(properties_test properties_test)
 endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest")

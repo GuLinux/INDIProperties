@@ -54,8 +54,8 @@ TEST(INDISwitch, UpdateProperty) {
   char *names[] = {"prop name", "prop name2"};
   ISState values[] = {ISS_OFF, ISS_ON};
   Property<Switch> my_prop{nullptr, {"device", "name"}, ISR_1OFMANY, update_f};
-  my_prop.add("prop name", "prop label", ISS_ON);
-  my_prop.add("prop name2", "prop label2", ISS_OFF);
+  my_prop.add("prop name", "prop label", ISS_ON)
+	 .add("prop name2", "prop label2", ISS_OFF);
   ASSERT_TRUE(my_prop.update("device", "name", values, names, 2));
   ASSERT_EQ( (vector<ISState>{ISS_OFF, ISS_ON}), states);
   ASSERT_EQ( (vector<ISState>{ISS_OFF, ISS_ON}), make_stream(my_prop.properties()).transform<vector<ISState>>([](ISwitch s){ return s.s; }).get() );
@@ -68,10 +68,10 @@ TEST(INDISwitch, UpdateProperty) {
 
 TEST(INDISwitch, RunOnFirst) {
   Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](ISState*, char**, int){ return false; }};
-  my_prop.add("prop name", "prop label", ISS_OFF);
-  my_prop.add("prop name2", "prop label2", ISS_OFF);
-  my_prop.add("prop name3", "prop label3", ISS_ON);
-  my_prop.add("prop name4", "prop label4", ISS_ON);
+  my_prop.add("prop name", "prop label", ISS_OFF)
+         .add("prop name2", "prop label2", ISS_OFF)
+         .add("prop name3", "prop label3", ISS_ON)
+         .add("prop name4", "prop label4", ISS_ON);
   Switch::Entry entry;
   my_prop->first_on_switch([&](const Switch::Entry &e){ entry = e; });
   ASSERT_EQ(2, entry.index);
@@ -80,10 +80,10 @@ TEST(INDISwitch, RunOnFirst) {
 
 TEST(INDISwitch, RunOnAll) {
   Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](ISState*, char**, int){ return false; }};
-  my_prop.add("prop name", "prop label", ISS_OFF);
-  my_prop.add("prop name2", "prop label2", ISS_OFF);
-  my_prop.add("prop name3", "prop label3", ISS_ON);
-  my_prop.add("prop name4", "prop label4", ISS_ON);
+  my_prop.add("prop name", "prop label", ISS_OFF)
+          .add("prop name2", "prop label2", ISS_OFF)
+          .add("prop name3", "prop label3", ISS_ON)
+          .add("prop name4", "prop label4", ISS_ON);
   vector<Switch::Entry> entries;
   my_prop->on_switches([&](const Switch::Entry &e){ entries.push_back( e ); });
   ASSERT_EQ(2, entries.size());
