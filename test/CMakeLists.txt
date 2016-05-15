@@ -1,4 +1,4 @@
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/CMakeLists.txt")
   message("Found googletest, enabling testing")
   add_subdirectory(googletest)
   
