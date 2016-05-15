@@ -32,7 +32,7 @@ namespace Properties {
   class Property {
     typedef typename T::vector_property T_vector_property;
     typedef typename T::single_property T_single_property;
-    typedef typename T::value_type T_value_type;
+    typedef typename T::vtype T_vtype;
     friend T;
   public:
     typedef std::shared_ptr<Property<T>> ptr;

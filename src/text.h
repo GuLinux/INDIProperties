@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef INDI_PROPERTIES_NUMBER_H
-#define INDI_PROPERTIES_NUMBER_H
+#ifndef INDI_PROPERTIES_TEXT_H
+#define INDI_PROPERTIES_TEXT_H
 
 #include <indiapi.h>
 #include <string>
@@ -27,25 +27,25 @@
 namespace INDI {
 namespace Properties {
 
-class Number
+class Text
 {
 public:
-  typedef INumberVectorProperty vector_property;
-  typedef INumber single_property;
-  typedef double vtype;
+  typedef ITextVectorProperty vector_property;
+  typedef IText single_property;
+  typedef const char* vtype;
   typedef std::function<bool(vtype *, char **, int)> OnUpdate;
-  Number(Property<Number> &main, OnUpdate on_update);
-  single_property new_property(const std::string& name, const std::string& label, vtype min, vtype max, vtype step, vtype value, const std::string format = "%d");
+  Text(Property<Text> &main, OnUpdate on_update);
+  single_property new_property(const std::string& name, const std::string& label, vtype value);
   void fill_vector();
   void do_register() const;
   bool update(vtype *values, char *names[], int n);
   void send(const std::string &message = {});
   
 private:
-  Property<Number> &main;
+  Property<Text> &main;
   OnUpdate on_update;
 };
 }
 }
 
-#endif // INDI_PROPERTIES_NUMBER_H
+#endif // INDI_PROPERTIES_TEXT_H

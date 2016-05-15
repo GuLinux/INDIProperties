@@ -44,6 +44,22 @@ TEST_F(Test_INDIProperties, UpdateNumber) {
   ASSERT_TRUE(properties.update("device name", "number name", new_values, texts, 2) );
 }
 
+TEST_F(Test_INDIProperties, AddText) {
+  properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](Text::vtype*, char **, int){ return false; } )
+	    .add("prop name", "prop label", "hello")
+	    .add("prop name 2", "prop label 2", "world");
+  Property<Text> &s = properties.text("text_name");
+  ASSERT_EQ("device name", s.device());
+}
+TEST_F(Test_INDIProperties, UpdateText) {
+  properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](Text::vtype*, char **, int){ return true; } )
+	    .add("prop name", "prop label", "hello")
+	    .add("prop name 2", "prop label 2", "world");
+  Text::vtype new_values[] = {"hello2", "world2"};
+  char * texts[] = {"prop name", "prop name 2"};
+  ASSERT_TRUE(properties.update("device name", "number name", new_values, texts, 2) );
+}
+
 TEST_F(Test_INDIProperties, ClearAll) {
     properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
 	    .add("prop name", "prop label", 0, 5, 1, 0)

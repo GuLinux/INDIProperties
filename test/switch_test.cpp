@@ -7,7 +7,7 @@ using namespace INDI::Properties;
 using namespace std;
 using namespace GuLinux;
 TEST(INDISwitch, AddProperty) {
-  Property<Switch> my_prop{nullptr, {}, ISR_1OFMANY, [](ISState*, char**, int){ return false; }};
+  Property<Switch> my_prop{nullptr, {}, ISR_1OFMANY, [](Switch::vtype*, char**, int){ return false; }};
   my_prop.add("prop name", "prop label", ISS_ON);
   my_prop.add("prop name2", "prop label2", ISS_OFF);
   ASSERT_EQ(2, my_prop.properties().size());
@@ -33,7 +33,7 @@ TEST(INDISwitch, NativeBehavior) {
   ASSERT_EQ(switches.data(), vp.sp);
   vp.sp[3].s = ISS_ON;
   ASSERT_EQ(ISS_ON, switches[3].s);
-  ISState new_states[]{ISS_OFF, ISS_ON, ISS_OFF, ISS_OFF, ISS_OFF};
+  Switch::vtype new_states[]{ISS_OFF, ISS_ON, ISS_OFF, ISS_OFF, ISS_OFF};
   char *names[]{"name0", "name1", "name2", "name3", "name4"};
   ASSERT_EQ(0, IUUpdateSwitch(&vp, new_states, names, 5));
   ASSERT_EQ(switches.data(), vp.sp);
@@ -45,29 +45,29 @@ TEST(INDISwitch, NativeBehavior) {
 
 TEST(INDISwitch, UpdateProperty) {
   bool retval = true;
-  vector<ISState> states(2);
-  auto update_f = [&](ISState* new_states, char**, int n){
+  vector<Switch::vtype> states(2);
+  auto update_f = [&](Switch::vtype* new_states, char**, int n){
     for(int i=0; i<n; i++)
       states[i] = new_states[i];
     return retval;
   };
   char *names[] = {"prop name", "prop name2"};
-  ISState values[] = {ISS_OFF, ISS_ON};
+  Switch::vtype values[] = {ISS_OFF, ISS_ON};
   Property<Switch> my_prop{nullptr, {"device", "name"}, ISR_1OFMANY, update_f};
   my_prop.add("prop name", "prop label", ISS_ON)
 	 .add("prop name2", "prop label2", ISS_OFF);
   ASSERT_TRUE(my_prop.update("device", "name", values, names, 2));
-  ASSERT_EQ( (vector<ISState>{ISS_OFF, ISS_ON}), states);
-  ASSERT_EQ( (vector<ISState>{ISS_OFF, ISS_ON}), make_stream(my_prop.properties()).transform<vector<ISState>>([](ISwitch s){ return s.s; }).get() );
+  ASSERT_EQ( (vector<Switch::vtype>{ISS_OFF, ISS_ON}), states);
+  ASSERT_EQ( (vector<Switch::vtype>{ISS_OFF, ISS_ON}), make_stream(my_prop.properties()).transform<vector<Switch::vtype>>([](ISwitch s){ return s.s; }).get() );
   retval = false;
   values[0] = ISS_ON;
   values[1] = ISS_OFF;
   ASSERT_FALSE(my_prop.update("device", "name", values, names, 2));
-  ASSERT_EQ( (vector<ISState>{ISS_ON, ISS_OFF}), states);
+  ASSERT_EQ( (vector<Switch::vtype>{ISS_ON, ISS_OFF}), states);
 }
 
 TEST(INDISwitch, RunOnFirst) {
-  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](ISState*, char**, int){ return false; }};
+  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](Switch::vtype*, char**, int){ return false; }};
   my_prop.add("prop name", "prop label", ISS_OFF)
          .add("prop name2", "prop label2", ISS_OFF)
          .add("prop name3", "prop label3", ISS_ON)
@@ -79,7 +79,7 @@ TEST(INDISwitch, RunOnFirst) {
 }
 
 TEST(INDISwitch, RunOnAll) {
-  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](ISState*, char**, int){ return false; }};
+  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](Switch::vtype*, char**, int){ return false; }};
   my_prop.add("prop name", "prop label", ISS_OFF)
           .add("prop name2", "prop label2", ISS_OFF)
           .add("prop name3", "prop label3", ISS_ON)

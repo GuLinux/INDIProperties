@@ -36,6 +36,11 @@ public:
   Properties<key_type> &operator[](const key_type &key) { return m_map[key]; }
   void clear() { for(auto &e: m_map) e.second.clear(); }
   void clear(const key_type &key) { m_map[key].clear(); }
+  template<typename ...Args>
+  bool update(const std::string &device, const std::string &name, Args ...args) {
+    return std::any_of(m_map.begin(), m_map.end(), [&](const each &each) { return each.second.update(device, name, args...); });
+  }
+
 private:
   std::unordered_map<key_type, Properties<key_type>> m_map;
 };

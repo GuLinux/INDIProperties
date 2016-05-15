@@ -31,14 +31,14 @@ class Switch
 public:
   typedef ISwitchVectorProperty vector_property;
   typedef ISwitch single_property;
-  typedef ISState value_type;
-  typedef std::function<bool(ISState *, char **, int)> OnUpdate;
+  typedef ISState vtype;
+  typedef std::function<bool(vtype *, char **, int)> OnUpdate;
   
   Switch(Property<Switch> &main, ISRule rule, OnUpdate on_update);
-  single_property new_property(const std::string& name, const std::string& label, ISState state);
+  single_property new_property(const std::string& name, const std::string& label, vtype state);
   void fill_vector();
   void do_register() const;
-  bool update(ISState *states, char *names[], int n);
+  bool update(vtype *states, char *names[], int n);
   void send(const std::string &message = {});
   
   struct Entry {long index; single_property iswitch; };

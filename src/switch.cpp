@@ -31,7 +31,7 @@ Switch::Switch(Property<Switch>& main, ISRule rule, OnUpdate on_update) : main{m
 
 
 
-Switch::single_property Switch::new_property(const string& name, const string& label, ISState state)
+Switch::single_property Switch::new_property(const string& name, const string& label, vtype state)
 {
   single_property s;
   IUFillSwitch(&s, name.c_str(), label.c_str(), state);
@@ -51,7 +51,7 @@ void Switch::do_register() const
 {
   main.m_device->defineSwitch(&main.m_vector_property);
 }
-bool Switch::update(ISState* states, char* names[], int n)
+bool Switch::update(Switch::vtype* states, char* names[], int n)
 {
   if(! on_update(states, names, n ))
     return false;

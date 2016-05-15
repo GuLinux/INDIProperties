@@ -10,6 +10,10 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/CMakeLists.txt")
   target_link_libraries(number_test indi_properties gtest_main indidriver)
   add_test(number_test number_test)
 
+  add_executable(text_test text_test.cpp)
+  target_link_libraries(text_test indi_properties gtest_main indidriver)
+  add_test(text_test text_test)
+
   add_executable(properties_test properties_test.cpp)
   target_link_libraries(properties_test indi_properties gtest_main indidriver)
   add_test(properties_test properties_test)

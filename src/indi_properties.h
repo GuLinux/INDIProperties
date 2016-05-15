@@ -26,6 +26,7 @@
 #include "indi_property.h"
 #include "switch.h"
 #include "number.h"
+#include "text.h"
 
 namespace INDI {
 namespace Properties {
@@ -38,32 +39,44 @@ public:
   Property<Number> &add_number(const key_type &key, DefaultDevice *device, const Property<Number>::BaseOptions &options, Number::OnUpdate on_update) {
     return *(m_numbers[key] = std::make_shared<Property<Number>>(device, options, on_update));
   }
+  Property<Text> &add_text(const key_type &key, DefaultDevice *device, const Property<Text>::BaseOptions &options, Text::OnUpdate on_update) {
+    return *(m_texts[key] = std::make_shared<Property<Text>>(device, options, on_update));
+  }
+  
   void remove(const key_type &key) {
     m_switches.erase(key);
     m_numbers.erase(key);
+    m_texts.erase(key);
   }
   
   void clear() {
     m_switches.clear();
     m_numbers.clear();
+    m_texts.clear();
   }
   
   
   Property<Switch> &switch_p(const key_type &key) { return *m_switches[key]; }
   Property<Number> &number(const key_type &key) { return *m_numbers[key]; }
+  Property<Text> &text(const key_type &key) { return *m_texts[key]; }
   
-  bool update(const std::string &device, const std::string &name, ISState *states, char *names[], int n) {
+  bool update(const std::string &device, const std::string &name, Switch::vtype *states, char *names[], int n) const {
     return std::any_of(m_switches.begin(), m_switches.end(), [&](const std::pair<key_type, Property<Switch>::ptr> &p) { return p.second->update(device, name, states, names, n); });
   }
-  bool update(const std::string &device, const std::string &name, double *values, char *names[], int n) {
+  bool update(const std::string &device, const std::string &name, Number::vtype *values, char *names[], int n) const {
     return std::any_of(m_numbers.begin(), m_numbers.end(), [&](const std::pair<key_type, Property<Number>::ptr> &p) { return p.second->update(device, name, values, names, n); });
+  }
+  bool update(const std::string &device, const std::string &name, Text::vtype *values, char *names[], int n) const {
+    return std::any_of(m_texts.begin(), m_texts.end(), [&](const std::pair<key_type, Property<Text>::ptr> &p) { return p.second->update(device, name, values, names, n); });
   }
 
   std::unordered_map<key_type, Property<Switch>::ptr> &switches() { return m_switches; }
   std::unordered_map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
+  std::unordered_map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
   std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
+  std::unordered_map<key_type, Property<Text>::ptr> m_texts;
 };
 }
 }
