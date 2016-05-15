@@ -28,6 +28,7 @@
 #include "number.h"
 #include "text.h"
 #include "blob.h"
+#include "light.h"
 
 namespace INDI {
 namespace Properties {
@@ -46,12 +47,16 @@ public:
   Property<Text> &add_blob(const key_type &key, DefaultDevice *device, const Property<Text>::BaseOptions &options, Blob::OnUpdate on_update) {
     return *(m_blobs[key] = std::make_shared<Property<Blob>>(device, options, on_update));
   }
+  Property<Text> &add_light(const key_type &key, DefaultDevice *device, const Property<Light>::BaseOptions &options) {
+    return *(m_lights[key] = std::make_shared<Property<Light>>(device, options));
+  }
   
   void remove(const key_type &key) {
     m_switches.erase(key);
     m_numbers.erase(key);
     m_texts.erase(key);
     m_blobs.erase(key);
+    m_lights.erase(key);
   }
   
   void clear() {
@@ -59,6 +64,7 @@ public:
     m_numbers.clear();
     m_texts.clear();
     m_blobs.clear();
+    m_lights.clear();
   }
   
   
@@ -66,6 +72,7 @@ public:
   Property<Number> &number(const key_type &key) { return *m_numbers[key]; }
   Property<Text> &text(const key_type &key) { return *m_texts[key]; }
   Property<Blob> &blob(const key_type &key) { return *m_blobs[key]; }
+  Property<Blob> &light(const key_type &key) { return *m_lights[key]; }
   
   bool update(const std::string &device, const std::string &name, Switch::vtype *states, char *names[], int n) const {
     return std::any_of(m_switches.begin(), m_switches.end(), [&](const std::pair<key_type, Property<Switch>::ptr> &p) { return p.second->update(device, name, states, names, n); });
@@ -83,12 +90,13 @@ public:
   std::unordered_map<key_type, Property<Switch>::ptr> &switches() { return m_switches; }
   std::unordered_map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
   std::unordered_map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
-  std::unordered_map<key_type, Property<Text>::ptr> &blobs() { return m_blobs; }
+  std::unordered_map<key_type, Property<Light>::ptr> &lights() { return m_lights; }
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
   std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
   std::unordered_map<key_type, Property<Text>::ptr> m_texts;
   std::unordered_map<key_type, Property<Blob>::ptr> m_blobs;
+  std::unordered_map<key_type, Property<Light>::ptr> m_lights;
 };
 }
 }
