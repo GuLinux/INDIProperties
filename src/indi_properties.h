@@ -25,6 +25,7 @@
 #include <functional>
 #include "indi_property.h"
 #include "switch.h"
+#include "number.h"
 
 namespace INDI {
 namespace Properties {
@@ -32,20 +33,29 @@ template<typename key_type = std::string>
 class Properties {
 public:
   Property<Switch> &add_switch(const key_type &key, DefaultDevice *device, const Property<Switch>::BaseOptions &options, ISRule rule, Switch::OnUpdate on_update) {
-    m_switches[key] = std::make_shared<Property<Switch>>(device, options, rule, on_update);
-    return *m_switches[key];
+    return *(m_switches[key] = std::make_shared<Property<Switch>>(device, options, rule, on_update));
   }
-  void remove_switch(const key_type &key) {
+  Property<Number> &add_number(const key_type &key, DefaultDevice *device, const Property<Number>::BaseOptions &options, Number::OnUpdate on_update) {
+    return *(m_numbers[key] = std::make_shared<Property<Number>>(device, options, on_update));
+  }
+  void remove(const key_type &key) {
     m_switches.erase(key);
+    m_numbers.erase(key);
   }
   
-  Property<Switch> &operator[](const key_type &key) { return *m_switches[key]; }
+  Property<Switch> &switch_p(const key_type &key) { return *m_switches[key]; }
+  Property<Number> &number(const key_type &key) { return *m_numbers[key]; }
+  
   bool update(const std::string &device, const std::string &name, ISState *states, char *names[], int n) {
     return std::any_of(m_switches.begin(), m_switches.end(), [&](const std::pair<key_type, Property<Switch>::ptr> &p) { return p.second->update(device, name, states, names, n); });
+  }
+  bool update(const std::string &device, const std::string &name, double *values, char *names[], int n) {
+    return std::any_of(m_numbers.begin(), m_numbers.end(), [&](const std::pair<key_type, Property<Number>::ptr> &p) { return p.second->update(device, name, values, names, n); });
   }
 
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
+  std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
 };
 }
 }

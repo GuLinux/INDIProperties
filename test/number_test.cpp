@@ -43,30 +43,3 @@ TEST(INDINumber, UpdateProperty) {
   ASSERT_EQ( (vector<double>{0, 0}), values);
 }
 
-/*
-TEST(INDINumber, RunOnFirst) {
-  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](ISState*, char**, int){ return false; }};
-  my_prop.add("prop name", "prop label", ISS_OFF)
-         .add("prop name2", "prop label2", ISS_OFF)
-         .add("prop name3", "prop label3", ISS_ON)
-         .add("prop name4", "prop label4", ISS_ON);
-  Switch::Entry entry;
-  my_prop->first_on_switch([&](const Switch::Entry &e){ entry = e; });
-  ASSERT_EQ(2, entry.index);
-  ASSERT_STREQ("prop name3", entry.iswitch.name);
-}
-
-TEST(INDINumber, RunOnAll) {
-  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](ISState*, char**, int){ return false; }};
-  my_prop.add("prop name", "prop label", ISS_OFF)
-          .add("prop name2", "prop label2", ISS_OFF)
-          .add("prop name3", "prop label3", ISS_ON)
-          .add("prop name4", "prop label4", ISS_ON);
-  vector<Switch::Entry> entries;
-  my_prop->on_switches([&](const Switch::Entry &e){ entries.push_back( e ); });
-  ASSERT_EQ(2, entries.size());
-  ASSERT_EQ(2, entries[0].index);
-  ASSERT_STREQ("prop name3", entries[0].iswitch.name);
-  ASSERT_EQ(3, entries[1].index);
-  ASSERT_STREQ("prop name4", entries[1].iswitch.name);
-}*/
