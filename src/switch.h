@@ -46,6 +46,7 @@ public:
   
   void first_on_switch(RunOnSwitch run_on_switch);
   void on_switches(RunOnSwitch run_on_switches);
+  std::vector<Entry> on_switches() const;
 private:
   Property<Switch> &main;
   ISRule m_rule;

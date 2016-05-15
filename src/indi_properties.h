@@ -22,6 +22,7 @@
 #include <map>
 #include <unordered_map>
 #include <string>
+#include <functional>
 #include "indi_property.h"
 #include "switch.h"
 
@@ -39,6 +40,9 @@ public:
   }
   
   Property<Switch> &operator[](const key_type &key) { return *m_switches[key]; }
+  bool update(const std::string &device, const std::string &name, ISState *states, char *names[], int n) {
+    return std::any_of(m_switches.begin(), m_switches.end(), [&](const std::pair<key_type, Property<Switch>::ptr> &p) { return p.second->update(device, name, states, names, n); });
+  }
 
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;

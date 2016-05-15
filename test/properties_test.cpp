@@ -19,3 +19,11 @@ TEST_F(Test_INDIProperties, AddSwitch) {
   Property<Switch> &s = properties["switch_name"];
   ASSERT_EQ("device name", s.device());
 }
+TEST_F(Test_INDIProperties, Update) {
+  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](ISState *, char **, int){ return true; } )
+	    .add("prop name", "prop label", ISS_ON)
+	    .add("prop name 2", "prop label 2", ISS_OFF);
+  ISState new_states[] = {ISS_OFF, ISS_ON};
+  char * texts[] = {"prop name", "prop name 2"};
+  ASSERT_TRUE(properties.update("device name", "switch name", new_states, texts, 2) );
+}

@@ -84,3 +84,10 @@ void Switch::on_switches(RunOnSwitch run_on_switches)
   SwitchToEntry s2e;
   GuLinux::make_stream(main.m_properties).transform<vector<Entry>>(s2e).filter(filter_on).for_each(run_on_switches);
 }
+
+vector< Switch::Entry > Switch::on_switches() const
+{
+  SwitchToEntry s2e;
+  return GuLinux::make_stream(main.m_properties).transform<vector<Entry>>(s2e).filter(filter_on).get();
+
+}
