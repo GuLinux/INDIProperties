@@ -27,6 +27,7 @@
 #include "switch.h"
 #include "number.h"
 #include "text.h"
+#include "blob.h"
 
 namespace INDI {
 namespace Properties {
@@ -42,23 +43,29 @@ public:
   Property<Text> &add_text(const key_type &key, DefaultDevice *device, const Property<Text>::BaseOptions &options, Text::OnUpdate on_update) {
     return *(m_texts[key] = std::make_shared<Property<Text>>(device, options, on_update));
   }
+  Property<Text> &add_blob(const key_type &key, DefaultDevice *device, const Property<Text>::BaseOptions &options, Blob::OnUpdate on_update) {
+    return *(m_blobs[key] = std::make_shared<Property<Blob>>(device, options, on_update));
+  }
   
   void remove(const key_type &key) {
     m_switches.erase(key);
     m_numbers.erase(key);
     m_texts.erase(key);
+    m_blobs.erase(key);
   }
   
   void clear() {
     m_switches.clear();
     m_numbers.clear();
     m_texts.clear();
+    m_blobs.clear();
   }
   
   
   Property<Switch> &switch_p(const key_type &key) { return *m_switches[key]; }
   Property<Number> &number(const key_type &key) { return *m_numbers[key]; }
   Property<Text> &text(const key_type &key) { return *m_texts[key]; }
+  Property<Blob> &blob(const key_type &key) { return *m_blobs[key]; }
   
   bool update(const std::string &device, const std::string &name, Switch::vtype *states, char *names[], int n) const {
     return std::any_of(m_switches.begin(), m_switches.end(), [&](const std::pair<key_type, Property<Switch>::ptr> &p) { return p.second->update(device, name, states, names, n); });
@@ -69,14 +76,19 @@ public:
   bool update(const std::string &device, const std::string &name, Text::vtype *values, char *names[], int n) const {
     return std::any_of(m_texts.begin(), m_texts.end(), [&](const std::pair<key_type, Property<Text>::ptr> &p) { return p.second->update(device, name, values, names, n); });
   }
+  bool update(const std::string &device, const std::string &name, int sizes[], int blobsizes[], char *blobs[], char *formats[], char *names[], int n) const {
+    return std::any_of(m_blobs.begin(), m_blobs.end(), [&](const std::pair<key_type, Property<Blob>::ptr> &p) { return p.second->update(device, name, sizes, blobsizes, blobs, formats, names, n); });
+  }
 
   std::unordered_map<key_type, Property<Switch>::ptr> &switches() { return m_switches; }
   std::unordered_map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
   std::unordered_map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
+  std::unordered_map<key_type, Property<Text>::ptr> &blobs() { return m_blobs; }
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
   std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
   std::unordered_map<key_type, Property<Text>::ptr> m_texts;
+  std::unordered_map<key_type, Property<Blob>::ptr> m_blobs;
 };
 }
 }
