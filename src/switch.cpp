@@ -21,6 +21,7 @@
 #include <indiproperty.h>
 #include <algorithm>
 #include "c++/containers_streams.h"
+#include "commons.h"
 
 using namespace std;
 using namespace INDI::Properties;
@@ -52,7 +53,7 @@ void Switch::do_register() const
 }
 bool Switch::update(Switch::vtype* states, char* names[], int n)
 {
-    if(! on_update(states, names, n ))
+    if(! on_update(mkvector<UpdateArgs>(n, states, names)))
         return false;
     return IUUpdateSwitch(&main.m_vector_property, states, names, n) == 0;
 }

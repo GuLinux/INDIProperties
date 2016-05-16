@@ -32,7 +32,8 @@ public:
   typedef ISwitchVectorProperty vector_property;
   typedef ISwitch single_property;
   typedef ISState vtype;
-  typedef std::function<bool(vtype *, char **, int)> OnUpdate;
+  typedef std::tuple<vtype, std::string> UpdateArgs;
+  typedef std::function<bool(std::vector<UpdateArgs>)> OnUpdate;
   
   Switch(Property<Switch> &main, ISRule rule, OnUpdate on_update);
   single_property new_property(const std::string& name, const std::string& label, vtype state);

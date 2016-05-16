@@ -26,7 +26,7 @@
 #include <algorithm>
 #include <memory>
 #include "c++/containers_streams.h"
-
+#include <tuple>
 namespace INDI {
 namespace Properties {
 
