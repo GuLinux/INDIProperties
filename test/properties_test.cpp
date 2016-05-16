@@ -13,14 +13,14 @@ public:
 };
 
 TEST_F(Test_INDIProperties, AddSwitch) {
-  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](ISState *, char **, int){ return false; } )
+  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](const vector<Switch::UpdateArgs> &){ return false; } )
 	    .add("prop name", "prop label", ISS_ON)
 	    .add("prop name 2", "prop label 2", ISS_OFF);
   Property<Switch> &s = properties.switch_p("switch_name");
   ASSERT_EQ("device name", s.identity().device);
 }
 TEST_F(Test_INDIProperties, UpdateSwitch) {
-  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](ISState *, char **, int){ return true; } )
+  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](const vector<Switch::UpdateArgs> &){ return true; } )
 	    .add("prop name", "prop label", ISS_ON)
 	    .add("prop name 2", "prop label 2", ISS_OFF);
   ISState new_states[] = {ISS_OFF, ISS_ON};
@@ -64,7 +64,7 @@ TEST_F(Test_INDIProperties, ClearAll) {
     properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
 	    .add("prop name", "prop label", 0, 5, 1, 0)
 	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
-  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](ISState *, char **, int){ return true; } )
+  properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](const vector<Switch::UpdateArgs> &){ return true; } )
 	    .add("prop name", "prop label", ISS_ON)
 	    .add("prop name 2", "prop label 2", ISS_OFF);
     ASSERT_EQ(1, properties.numbers().size());
