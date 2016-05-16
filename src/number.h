@@ -33,7 +33,8 @@ public:
   typedef INumberVectorProperty vector_property;
   typedef INumber single_property;
   typedef double vtype;
-  typedef std::function<bool(vtype *, char **, int)> OnUpdate;
+  typedef std::tuple<vtype, std::string> UpdateArgs;
+  typedef std::function<bool(std::vector<UpdateArgs>)> OnUpdate;
   Number(Property<Number> &main, OnUpdate on_update);
   single_property new_property(const std::string& name, const std::string& label, vtype min, vtype max, vtype step, vtype value, const std::string format = "%d");
   void fill_vector();

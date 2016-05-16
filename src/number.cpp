@@ -18,6 +18,7 @@
  */
 
 #include "number.h"
+#include "commons.h"
 using namespace std;
 using namespace INDI::Properties;
 
@@ -52,7 +53,7 @@ void Number::do_register() const
 
 bool Number::update(vtype* values, char* names[], int n)
 {
-    if(! on_update(values, names, n ))
+    if(! on_update(mkvector<UpdateArgs>(n, values, names)))
         return false;
     return IUUpdateNumber(&main.m_vector_property, values, names, n) == 0;
 }

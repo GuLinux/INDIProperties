@@ -24,24 +24,24 @@ TEST_F(Test_INDIProperties, UpdateSwitch) {
 	    .add("prop name", "prop label", ISS_ON)
 	    .add("prop name 2", "prop label 2", ISS_OFF);
   ISState new_states[] = {ISS_OFF, ISS_ON};
-  char * texts[] = {"prop name", "prop name 2"};
-  ASSERT_TRUE(properties.update("device name", "switch name", new_states, texts, 2) );
+  const char * texts[] = {"prop name", "prop name 2"};
+  ASSERT_TRUE(properties.update("device name", "switch name", new_states, const_cast<char**>(texts), 2) );
 }
 
 TEST_F(Test_INDIProperties, AddNumber) {
-  properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return false; } )
+  properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Number::UpdateArgs> &){ return false; } )
 	    .add("prop name", "prop label", 0, 5, 1, 0)
 	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
   Property<Number> &s = properties.number("number_name");
   ASSERT_EQ("device name", s.identity().device);
 }
 TEST_F(Test_INDIProperties, UpdateNumber) {
-  properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
+  properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Number::UpdateArgs> &){ return true; } )
 	    .add("prop name", "prop label", 0, 5, 1, 0)
 	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
   double new_values[] = {2, 5};
-  char * texts[] = {"prop name", "prop name 2"};
-  ASSERT_TRUE(properties.update("device name", "number name", new_values, texts, 2) );
+  const char * texts[] = {"prop name", "prop name 2"};
+  ASSERT_TRUE(properties.update("device name", "number name", new_values, const_cast<char**>(texts), 2) );
 }
 
 TEST_F(Test_INDIProperties, AddText) {
@@ -56,12 +56,12 @@ TEST_F(Test_INDIProperties, UpdateText) {
 	    .add("prop name", "prop label", "hello")
 	    .add("prop name 2", "prop label 2", "world");
   Text::vtype new_values[] = {"hello2", "world2"};
-  char * texts[] = {"prop name", "prop name 2"};
-  ASSERT_TRUE(properties.update("device name", "number name", new_values, texts, 2) );
+  const char * texts[] = {"prop name", "prop name 2"};
+  ASSERT_TRUE(properties.update("device name", "number name", new_values, const_cast<char**>(texts), 2) );
 }
 
 TEST_F(Test_INDIProperties, ClearAll) {
-    properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
+    properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Number::UpdateArgs> &){ return true; } )
 	    .add("prop name", "prop label", 0, 5, 1, 0)
 	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
   properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](const vector<Switch::UpdateArgs> &){ return true; } )
@@ -76,7 +76,7 @@ TEST_F(Test_INDIProperties, ClearAll) {
 
 
 TEST_F(Test_INDIProperties, Clear) {
-    properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
+    properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Number::UpdateArgs> &){ return true; } )
 	    .add("prop name", "prop label", 0, 5, 1, 0)
 	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
     properties.numbers().clear();

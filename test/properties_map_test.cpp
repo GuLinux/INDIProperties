@@ -23,7 +23,7 @@ TEST_F(Test_INDIPropertiesMap, Creation) {
 }
 
 TEST_F(Test_INDIPropertiesMap, ClearAll) {
-    properties_map["hello"].add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int) {
+    properties_map["hello"].add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Number::UpdateArgs> &) {
         return true;
     } )
     .add("prop name", "prop label", 0, 5, 1, 0)
@@ -47,8 +47,8 @@ TEST_F(Test_INDIPropertiesMap, Update) {
     ISState state = ISS_OFF;
     string text = "hello";
     double num = 3;
-    properties_map["hello"].add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [&](Number::vtype *v, char **, int) {
-        num = v[0];
+    properties_map["hello"].add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [&](const vector<Number::UpdateArgs> &v) {
+        num = get<0>(v[0]);
         return true;
     } )
     .add("prop name", "prop label 2", 1, 6, 2, num);
