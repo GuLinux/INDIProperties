@@ -31,6 +31,10 @@ namespace Properties {
   Tuple tuple_for(int index, A *a, B *b) {
     return std::make_tuple(a[index], b[index]);
   }
+  template<typename Tuple, typename A, typename B, typename C, typename D, typename E>
+  Tuple tuple_for(int index, A *a, B *b, C *c, D *d, E *e) {
+    return std::make_tuple(a[index], b[index], c[index], d[index], e[index]);
+  }
   
   template<typename T, typename ...Args>
   std::vector<T> mkvector(int n, Args ...args) {

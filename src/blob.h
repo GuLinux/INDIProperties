@@ -32,7 +32,8 @@ class Blob
 public:
   typedef IBLOBVectorProperty vector_property;
   typedef IBLOB single_property;
-  typedef std::function<bool(int sizes[], int blobsizes[], char *blobs[], char *formats[], char *names[], int n)> OnUpdate;
+  typedef std::tuple<int, int, char*, std::string, std::string> UpdateArgs;
+  typedef std::function<bool(std::vector<UpdateArgs>)> OnUpdate;
   Blob(Property<Blob> &main, OnUpdate on_update);
   single_property new_property(const std::string& name, const std::string& label, const std::string &format);
   void fill_vector();

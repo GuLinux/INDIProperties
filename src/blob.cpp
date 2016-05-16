@@ -18,6 +18,7 @@
  */
 
 #include "blob.h"
+#include "commons.h"
 using namespace std;
 using namespace INDI::Properties;
 
@@ -52,7 +53,7 @@ void Blob::do_register() const
 
 bool Blob::update(int sizes[], int blobsizes[], char *blobs[], char *formats[], char *names[], int n)
 {
-    if(! on_update(sizes, blobsizes, blobs, formats, names, n ))
+    if(! on_update(mkvector<UpdateArgs>(n, sizes, blobsizes, blobs, formats, names) ))
         return false;
     return IUUpdateBLOB(&main.m_vector_property, sizes, blobsizes, blobs, formats, names, n) == 0;
 }
