@@ -52,8 +52,6 @@ public:
     Property(INDI::DefaultDevice *device, const Identity &base_options, Args ... args)
         : m_device {device}, m_property_wrapper {*this, args...}, m_base_options {base_options}
     {
-        if(m_device)
-            m_property_wrapper.do_register();
     }
 
     ~Property() {
@@ -62,7 +60,7 @@ public:
 
     void unregister() {
         if(m_device /* && m_device->getProperty(m_base_options.name.c_str()) TODO: test this */)
-            m_device->removeProperty(m_base_options.name.c_str(), nullptr);
+            m_device->deleteProperty(m_base_options.name.c_str());
     }
     Identity identity() const {
         return m_base_options;
