@@ -35,19 +35,19 @@ namespace Properties {
 template<typename key_type = std::string>
 class Properties {
 public:
-  Property<Switch> &add_switch(const key_type &key, DefaultDevice *device, const Property<Switch>::BaseOptions &options, ISRule rule, Switch::OnUpdate on_update) {
+  Property<Switch> &add_switch(const key_type &key, DefaultDevice *device, const Identity &options, ISRule rule, Switch::OnUpdate on_update) {
     return *(m_switches[key] = std::make_shared<Property<Switch>>(device, options, rule, on_update));
   }
-  Property<Number> &add_number(const key_type &key, DefaultDevice *device, const Property<Number>::BaseOptions &options, Number::OnUpdate on_update) {
+  Property<Number> &add_number(const key_type &key, DefaultDevice *device, const Identity &options, Number::OnUpdate on_update) {
     return *(m_numbers[key] = std::make_shared<Property<Number>>(device, options, on_update));
   }
-  Property<Text> &add_text(const key_type &key, DefaultDevice *device, const Property<Text>::BaseOptions &options, Text::OnUpdate on_update) {
+  Property<Text> &add_text(const key_type &key, DefaultDevice *device, const Identity &options, Text::OnUpdate on_update) {
     return *(m_texts[key] = std::make_shared<Property<Text>>(device, options, on_update));
   }
-  Property<Text> &add_blob(const key_type &key, DefaultDevice *device, const Property<Text>::BaseOptions &options, Blob::OnUpdate on_update) {
+  Property<Text> &add_blob(const key_type &key, DefaultDevice *device, const Identity &options, Blob::OnUpdate on_update) {
     return *(m_blobs[key] = std::make_shared<Property<Blob>>(device, options, on_update));
   }
-  Property<Text> &add_light(const key_type &key, DefaultDevice *device, const Property<Light>::BaseOptions &options) {
+  Property<Text> &add_light(const key_type &key, DefaultDevice *device, const Identity &options) {
     return *(m_lights[key] = std::make_shared<Property<Light>>(device, options));
   }
   

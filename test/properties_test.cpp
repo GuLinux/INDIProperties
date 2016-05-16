@@ -17,7 +17,7 @@ TEST_F(Test_INDIProperties, AddSwitch) {
 	    .add("prop name", "prop label", ISS_ON)
 	    .add("prop name 2", "prop label 2", ISS_OFF);
   Property<Switch> &s = properties.switch_p("switch_name");
-  ASSERT_EQ("device name", s.device());
+  ASSERT_EQ("device name", s.identity().device);
 }
 TEST_F(Test_INDIProperties, UpdateSwitch) {
   properties.add_switch("switch_name", nullptr, {"device name", "switch name", "label", "group"}, ISR_1OFMANY, [](ISState *, char **, int){ return true; } )
@@ -33,7 +33,7 @@ TEST_F(Test_INDIProperties, AddNumber) {
 	    .add("prop name", "prop label", 0, 5, 1, 0)
 	    .add("prop name 2", "prop label 2", 1, 6, 2, 3);
   Property<Number> &s = properties.number("number_name");
-  ASSERT_EQ("device name", s.device());
+  ASSERT_EQ("device name", s.identity().device);
 }
 TEST_F(Test_INDIProperties, UpdateNumber) {
   properties.add_number("number_name", nullptr, {"device name", "number name", "label", "group"}, [](double *, char **, int){ return true; } )
@@ -49,7 +49,7 @@ TEST_F(Test_INDIProperties, AddText) {
 	    .add("prop name", "prop label", "hello")
 	    .add("prop name 2", "prop label 2", "world");
   Property<Text> &s = properties.text("text_name");
-  ASSERT_EQ("device name", s.device());
+  ASSERT_EQ("device name", s.identity().device);
 }
 TEST_F(Test_INDIProperties, UpdateText) {
   properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](Text::vtype*, char **, int){ return true; } )

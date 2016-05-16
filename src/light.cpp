@@ -21,37 +21,36 @@
 using namespace std;
 using namespace INDI::Properties;
 
-Light::Light(Property< Light >& main) : main{main}
+Light::Light(Property< Light >& main) : main {main}
 {
 }
 
 
 Light::single_property Light::new_property(const string& name, const string& label, vtype value)
 {
-  single_property s;
-  IUFillLight(&s, name.c_str(), label.c_str(), value);
-  return s;
+    single_property s;
+    IUFillLight(&s, name.c_str(), label.c_str(), value);
+    return s;
 }
 
 void Light::fill_vector()
 {
-  IUFillLightVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
-		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
-		     main.group().c_str(), main.m_base_options.state);
-  send();
+    IUFillLightVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(),
+                      UNPACK_IDENTITY(main), main.m_base_options.state);
+    send();
 }
 
 void Light::send(const string& message)
 {
-  IDSetLight(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetLight(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
 }
 
 void Light::do_register() const
 {
-  main.m_device->defineLight(&main.m_vector_property);
+    main.m_device->defineLight(&main.m_vector_property);
 }
 
 bool Light::update(vtype* values, char* names[], int n)
 {
-  return false; // Read only widget
+    return false; // Read only widget
 }

@@ -21,41 +21,40 @@
 using namespace std;
 using namespace INDI::Properties;
 
-Blob::Blob(Property< Blob >& main, OnUpdate on_update) : main{main}, on_update{on_update}
+Blob::Blob(Property< Blob >& main, OnUpdate on_update) : main {main}, on_update {on_update}
 {
 }
 
 
 Blob::single_property Blob::new_property(const string& name, const string& label, const string &format)
 {
-  single_property s;
-  IUFillBLOB(&s, name.c_str(), label.c_str(), format.c_str());
-  return s;
+    single_property s;
+    IUFillBLOB(&s, name.c_str(), label.c_str(), format.c_str());
+    return s;
 }
 
 void Blob::fill_vector()
 {
-  IUFillBLOBVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
-		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
-		     main.group().c_str(), main.m_base_options.permissions, main.m_base_options.timeout, main.m_base_options.state);
-  send();
+    IUFillBLOBVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(),
+                     UNPACK_IDENTITY(main), main.m_base_options.permissions, main.m_base_options.timeout, main.m_base_options.state);
+    send();
 }
 
 void Blob::send(const string& message)
 {
-  IDSetBLOB(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetBLOB(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
 }
 
 void Blob::do_register() const
 {
-  main.m_device->defineBLOB(&main.m_vector_property);
+    main.m_device->defineBLOB(&main.m_vector_property);
 }
 
 bool Blob::update(int sizes[], int blobsizes[], char *blobs[], char *formats[], char *names[], int n)
 {
-  if(! on_update(sizes, blobsizes, blobs, formats, names, n ))
-    return false;
-  return IUUpdateBLOB(&main.m_vector_property, sizes, blobsizes, blobs, formats, names, n) == 0;
+    if(! on_update(sizes, blobsizes, blobs, formats, names, n ))
+        return false;
+    return IUUpdateBLOB(&main.m_vector_property, sizes, blobsizes, blobs, formats, names, n) == 0;
 }
 
 

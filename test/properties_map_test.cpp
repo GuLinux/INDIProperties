@@ -17,7 +17,7 @@ TEST_F(Test_INDIPropertiesMap, Creation) {
 	    .add("prop name", "prop label", ISS_ON)
 	    .add("prop name 2", "prop label 2", ISS_OFF);
   Property<Switch> &s = properties_map["hello"].switch_p("switch_name");
-  ASSERT_EQ("device name", s.device());
+  ASSERT_EQ("device name", s.identity().device);
 }
 
 TEST_F(Test_INDIPropertiesMap, ClearAll) {

@@ -21,39 +21,38 @@
 using namespace std;
 using namespace INDI::Properties;
 
-Text::Text(Property< Text >& main, OnUpdate on_update) : main{main}, on_update{on_update}
+Text::Text(Property< Text >& main, OnUpdate on_update) : main {main}, on_update {on_update}
 {
 }
 
 
 Text::single_property Text::new_property(const string& name, const string& label, vtype value)
 {
-  single_property s;
-  IUFillText(&s, name.c_str(), label.c_str(), value);
-  return s;
+    single_property s;
+    IUFillText(&s, name.c_str(), label.c_str(), value);
+    return s;
 }
 
 void Text::fill_vector()
 {
-  IUFillTextVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(), 
-		     main.device().c_str(), main.name().c_str(), main.label().c_str(),
-		     main.group().c_str(), main.m_base_options.permissions, main.m_base_options.timeout, main.m_base_options.state);
-  send();
+    IUFillTextVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(),
+                     UNPACK_IDENTITY(main), main.m_base_options.permissions, main.m_base_options.timeout, main.m_base_options.state);
+    send();
 }
 
 void Text::send(const string& message)
 {
-  IDSetText(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetText(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
 }
 
 void Text::do_register() const
 {
-  main.m_device->defineText(&main.m_vector_property);
+    main.m_device->defineText(&main.m_vector_property);
 }
 
 bool Text::update(vtype* values, char* names[], int n)
 {
-  if(! on_update(values, names, n ))
-    return false;
-  return IUUpdateText(&main.m_vector_property, const_cast<char**>(values), names, n) == 0;
+    if(! on_update(values, names, n ))
+        return false;
+    return IUUpdateText(&main.m_vector_property, const_cast<char**>(values), names, n) == 0;
 }

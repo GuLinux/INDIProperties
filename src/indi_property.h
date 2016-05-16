@@ -29,77 +29,97 @@
 
 namespace INDI {
 namespace Properties {
-  template<typename T>
-  class Property {
+
+struct Identity {
+    std::string device, name, label, group;
+    IPerm permissions;
+    IPState state;
+    double timeout;
+    Identity(const std::string &device = {}, const std::string &name = {},
+             const std::string &label = {}, const std::string &group = {},
+             IPerm permissions = IP_RW, IPState state = IPS_OK, double timeout = 60.)
+        : device {device}, name {name}, label {label}, group {group}, permissions {permissions}, state {state}, timeout {timeout} {}
+};
+
+template<typename T>
+class Property {
     typedef typename T::vector_property T_vector_property;
     typedef typename T::single_property T_single_property;
     friend T;
-  public:
+public:
     typedef std::shared_ptr<Property<T>> ptr;
-    struct BaseOptions {
-      std::string device, name, label, group;
-      IPerm permissions;
-      IPState state;
-      double timeout;
-      BaseOptions(const std::string &device = {}, const std::string &name = {}, 
-        const std::string &label = {}, const std::string &group = {},
-        IPerm permissions = IP_RW, IPState state = IPS_OK, double timeout = 60.)
-        : device{device}, name{name}, label{label}, group{group}, permissions{permissions}, state{state}, timeout{timeout} {}
-    };
     template<typename ... Args>
-    Property(INDI::DefaultDevice *device, const BaseOptions &base_options, Args ... args) 
-      : m_device{device}, m_property_wrapper{*this, args...}, m_base_options{base_options} 
+    Property(INDI::DefaultDevice *device, const Identity &base_options, Args ... args)
+        : m_device {device}, m_property_wrapper {*this, args...}, m_base_options {base_options}
     {
-      if(m_device)
-	m_property_wrapper.do_register();
+        if(m_device)
+            m_property_wrapper.do_register();
     }
-    
+
     ~Property() {
-      unregister();
+        unregister();
     }
-    
+
     void unregister() {
-      if(m_device /* && m_device->getProperty(m_base_options.name.c_str()) TODO: test this */)
-        m_device->removeProperty(m_base_options.name.c_str(), nullptr);
+        if(m_device /* && m_device->getProperty(m_base_options.name.c_str()) TODO: test this */)
+            m_device->removeProperty(m_base_options.name.c_str(), nullptr);
     }
-    std::string name() const { return m_base_options.name; }
-    std::string device() const { return m_base_options.device; }
-    std::string label() const { return m_base_options.label; }
-    std::string group() const { return m_base_options.group; }
-    
-    std::vector<T_single_property> properties() const { return m_properties; }
-    
-    T *operator->() { return &m_property_wrapper; }
-    T &get() { return **this; }
-    
-    T_vector_property &vector_property() { return m_vector_property; }
+    Identity identity() const {
+        return m_base_options;
+    }
+
+    std::vector<T_single_property> properties() const {
+        return m_properties;
+    }
+
+    T *operator->() {
+        return &m_property_wrapper;
+    }
+    T &get() {
+        return **this;
+    }
+
+    T_vector_property &vector_property() {
+        return m_vector_property;
+    }
     template<typename ... Args> Property<T> &add(Args ... args) {
-      m_properties.push_back(m_property_wrapper.new_property(args...));
-      m_property_wrapper.fill_vector();
-      return *this;
+        m_properties.push_back(m_property_wrapper.new_property(args...));
+        m_property_wrapper.fill_vector();
+        return *this;
     }
 
     template<typename ... Args>
     bool update(const std::string &device, const std::string &name, const Args... args) {
-      if( (device != m_base_options.device || name != m_base_options.name) || ! m_property_wrapper.update(args...) )
-	return false;
-      m_vector_property.s = IPS_OK;
-      m_property_wrapper.send();
-      return true;
+        if( (device != m_base_options.device || name != m_base_options.name) || ! m_property_wrapper.update(args...) )
+            return false;
+        m_vector_property.s = IPS_OK;
+        m_property_wrapper.send();
+        return true;
     }
-    
-    GuLinux::optional<T_single_property> first() { return GuLinux::make_stream(m_properties).first(); }
+
+    GuLinux::optional<T_single_property> first() {
+        return GuLinux::make_stream(m_properties).first();
+    }
     template<typename UnaryFunction>
-    GuLinux::optional<T_single_property> first(UnaryFunction f) { return GuLinux::make_stream(m_properties).first(f); }
-    GuLinux::optional<T_single_property> find(const std::string &name) { return first([&](const T_single_property &p){ return name == p.name; }); }
-  private:
+    GuLinux::optional<T_single_property> first(UnaryFunction f) {
+        return GuLinux::make_stream(m_properties).first(f);
+    }
+    GuLinux::optional<T_single_property> find(const std::string &name) {
+        return first([&](const T_single_property &p) {
+            return name == p.name;
+        });
+    }
+private:
     T m_property_wrapper;
-    BaseOptions m_base_options;
+    Identity m_base_options;
     std::vector<T_single_property> m_properties;
     T_vector_property m_vector_property;
     INDI::DefaultDevice *m_device;
-  };
+};
 }
 }
+
+#define CSTR(s) s.c_str()
+#define UNPACK_IDENTITY(dev) CSTR(dev.identity().device), CSTR(dev.identity().name), CSTR(dev.identity().label), CSTR(dev.identity().group)
 
 #endif
