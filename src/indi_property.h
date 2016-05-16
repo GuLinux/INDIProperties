@@ -91,6 +91,7 @@ namespace Properties {
     GuLinux::optional<T_single_property> first() { return GuLinux::make_stream(m_properties).first(); }
     template<typename UnaryFunction>
     GuLinux::optional<T_single_property> first(UnaryFunction f) { return GuLinux::make_stream(m_properties).first(f); }
+    GuLinux::optional<T_single_property> find(const std::string &name) { return first([&](const T_single_property &p){ return name == p.name; }); }
   private:
     T m_property_wrapper;
     BaseOptions m_base_options;

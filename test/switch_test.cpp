@@ -117,3 +117,17 @@ TEST(INDISwitch, First_With_Function) {
   ASSERT_EQ(ISS_ON, (*first).s);
   ASSERT_STREQ("prop name3", (*first).name );
 }
+
+
+TEST(INDISwitch, Find_With_Name) {
+  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](Switch::vtype*, char**, int){ return false; }};
+  my_prop.add("prop name", "prop label", ISS_OFF)
+         .add("prop name2", "prop label2", ISS_OFF)
+         .add("prop name3", "prop label3", ISS_ON)
+         .add("prop name4", "prop label4", ISS_ON);
+  Switch::Entry entry;
+  auto first = my_prop.find("prop name3");
+  ASSERT_TRUE(first);
+  ASSERT_EQ(ISS_ON, (*first).s);
+  ASSERT_STREQ("prop name3", (*first).name );
+}
