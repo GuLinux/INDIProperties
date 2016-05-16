@@ -29,11 +29,11 @@
 
 namespace INDI {
 namespace Properties {
-template<typename key_type = std::string>
+template<typename key_type = std::string, typename sub_key_type = std::string>
 class PropertiesMap {
 public:
-  typedef std::pair<key_type, Properties<key_type>> each;
-  Properties<key_type> &operator[](const key_type &key) { return m_map[key]; }
+  typedef std::pair<key_type, Properties<sub_key_type>> each;
+  Properties<sub_key_type> &operator[](const key_type &key) { return m_map[key]; }
   void clear() { for(auto &e: m_map) e.second.clear(); }
   void clear(const key_type &key) { m_map[key].clear(); }
   template<typename ...Args>
@@ -42,7 +42,7 @@ public:
   }
 
 private:
-  std::unordered_map<key_type, Properties<key_type>> m_map;
+  std::unordered_map<key_type, Properties<sub_key_type>> m_map;
 };
 }
 }
