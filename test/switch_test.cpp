@@ -92,3 +92,28 @@ TEST(INDISwitch, RunOnAll) {
   ASSERT_EQ(3, entries[1].index);
   ASSERT_STREQ("prop name4", entries[1].iswitch.name);
 }
+
+TEST(INDISwitch, First) {
+  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](Switch::vtype*, char**, int){ return false; }};
+  my_prop.add("prop name", "prop label", ISS_OFF)
+         .add("prop name2", "prop label2", ISS_OFF)
+         .add("prop name3", "prop label3", ISS_ON)
+         .add("prop name4", "prop label4", ISS_ON);
+  Switch::Entry entry;
+  auto first = my_prop.first();
+  ASSERT_TRUE(first);
+  ASSERT_EQ(ISS_OFF, (*first).s);
+}
+
+TEST(INDISwitch, First_With_Function) {
+  Property<Switch> my_prop{nullptr, {}, ISR_NOFMANY, [](Switch::vtype*, char**, int){ return false; }};
+  my_prop.add("prop name", "prop label", ISS_OFF)
+         .add("prop name2", "prop label2", ISS_OFF)
+         .add("prop name3", "prop label3", ISS_ON)
+         .add("prop name4", "prop label4", ISS_ON);
+  Switch::Entry entry;
+  auto first = my_prop.first([](const ISwitch &i){ return i.s == ISS_ON; });
+  ASSERT_TRUE(first);
+  ASSERT_EQ(ISS_ON, (*first).s);
+  ASSERT_STREQ("prop name3", (*first).name );
+}

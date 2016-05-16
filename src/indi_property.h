@@ -25,6 +25,7 @@
 #include <defaultdevice.h>
 #include <algorithm>
 #include <memory>
+#include "c++/containers_streams.h"
 
 namespace INDI {
 namespace Properties {
@@ -86,6 +87,10 @@ namespace Properties {
       m_property_wrapper.send();
       return true;
     }
+    
+    GuLinux::optional<T_single_property> first() { return GuLinux::make_stream(m_properties).first(); }
+    template<typename UnaryFunction>
+    GuLinux::optional<T_single_property> first(UnaryFunction f) { return GuLinux::make_stream(m_properties).first(f); }
   private:
     T m_property_wrapper;
     BaseOptions m_base_options;
