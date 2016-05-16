@@ -33,7 +33,8 @@ public:
   typedef ITextVectorProperty vector_property;
   typedef IText single_property;
   typedef const char* vtype;
-  typedef std::function<bool(vtype *, char **, int)> OnUpdate;
+  typedef std::tuple<vtype, std::string> UpdateArgs;
+  typedef std::function<bool(std::vector<UpdateArgs>)> OnUpdate;
   Text(Property<Text> &main, OnUpdate on_update);
   single_property new_property(const std::string& name, const std::string& label, vtype value);
   void fill_vector();

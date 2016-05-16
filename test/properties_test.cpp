@@ -45,14 +45,14 @@ TEST_F(Test_INDIProperties, UpdateNumber) {
 }
 
 TEST_F(Test_INDIProperties, AddText) {
-  properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](Text::vtype*, char **, int){ return false; } )
+  properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Text::UpdateArgs> &){ return false; } )
 	    .add("prop name", "prop label", "hello")
 	    .add("prop name 2", "prop label 2", "world");
   Property<Text> &s = properties.text("text_name");
   ASSERT_EQ("device name", s.identity().device);
 }
 TEST_F(Test_INDIProperties, UpdateText) {
-  properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](Text::vtype*, char **, int){ return true; } )
+  properties.add_text("text_name", nullptr, {"device name", "number name", "label", "group"}, [](const vector<Text::UpdateArgs> &){ return true; } )
 	    .add("prop name", "prop label", "hello")
 	    .add("prop name 2", "prop label 2", "world");
   Text::vtype new_values[] = {"hello2", "world2"};

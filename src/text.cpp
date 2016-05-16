@@ -18,6 +18,8 @@
  */
 
 #include "text.h"
+#include "commons.h"
+
 using namespace std;
 using namespace INDI::Properties;
 
@@ -52,7 +54,7 @@ void Text::do_register() const
 
 bool Text::update(vtype* values, char* names[], int n)
 {
-    if(! on_update(values, names, n ))
+    if(! on_update(mkvector<UpdateArgs>(n, values, names)))
         return false;
     return IUUpdateText(&main.m_vector_property, const_cast<char**>(values), names, n) == 0;
 }

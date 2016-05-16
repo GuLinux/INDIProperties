@@ -58,8 +58,8 @@ TEST_F(Test_INDIPropertiesMap, Update) {
         return true;
     } )
     .add("prop name", "prop label", state);
-    properties_map["foo"].add_text("text_name", nullptr, {"device name", "text name", "label", "group"}, [&](Text::vtype* v, char **, int) {
-        text = v[0];
+    properties_map["foo"].add_text("text_name", nullptr, {"device name", "text name", "label", "group"}, [&](const vector<Text::UpdateArgs> &v) {
+        text = get<0>(v[0]);
         return true;
     } )
     .add("prop name", "prop label 2", text.c_str());
