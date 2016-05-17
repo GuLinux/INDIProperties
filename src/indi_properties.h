@@ -32,6 +32,7 @@
 
 namespace INDI {
 namespace Properties {
+
 template<typename key_type = std::string>
 class Properties {
 public:
@@ -91,6 +92,19 @@ public:
   std::unordered_map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
   std::unordered_map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
   std::unordered_map<key_type, Property<Light>::ptr> &lights() { return m_lights; }
+  
+  template<typename T> void autoregister(T &m_map) {
+    typedef typename T::mapped_type V;
+    typedef typename std::pair<key_type, V> P;
+    GuLinux::make_stream(m_map).cp_filter([](const P &p){ return !p.second->is_property_registered(); }).for_each([](const P &p){ p.second->do_register(); });
+  }
+  void register_unregistered_properties() {
+    autoregister(m_switches);
+    autoregister(m_numbers);
+    autoregister(m_texts);
+    autoregister(m_blobs);
+    autoregister(m_lights);
+  }
 private:
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
   std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
