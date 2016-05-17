@@ -59,7 +59,7 @@ public:
     }
 
     void unregister() {
-        if(m_device /* && m_device->getProperty(m_base_options.name.c_str()) TODO: test this */)
+        if(is_property_registered())
             m_device->deleteProperty(m_base_options.name.c_str());
     }
     Identity identity() const {
@@ -83,6 +83,8 @@ public:
     template<typename ... Args> Property<T> &add(Args ... args) {
         m_properties.push_back(m_property_wrapper.new_property(args...));
         m_property_wrapper.fill_vector();
+	if(is_property_registered())
+	  m_property_wrapper.send();
         return *this;
     }
 
@@ -112,7 +114,8 @@ private:
     Identity m_base_options;
     std::vector<T_single_property> m_properties;
     T_vector_property m_vector_property;
-    INDI::DefaultDevice *m_device;
+    INDI::DefaultDevice *m_device = nullptr;
+    bool is_property_registered() const { return m_device && m_device->getProperty(m_base_options.name.c_str()); }
 };
 }
 }

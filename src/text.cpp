@@ -39,7 +39,6 @@ void Text::fill_vector()
 {
     IUFillTextVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(),
                      UNPACK_IDENTITY(main), main.m_base_options.permissions, main.m_base_options.timeout, main.m_base_options.state);
-    send();
 }
 
 void Text::send(const string& message)

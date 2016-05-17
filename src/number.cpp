@@ -38,7 +38,6 @@ void Number::fill_vector()
 {
     IUFillNumberVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(),
                        UNPACK_IDENTITY(main), main.m_base_options.permissions, main.m_base_options.timeout, main.m_base_options.state);
-    send();
 }
 
 void Number::send(const string& message)

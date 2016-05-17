@@ -30,6 +30,10 @@ Switch::Switch(Property<Switch>& main, ISRule rule, OnUpdate on_update) : main {
 {
 }
 
+bool Switch::On(const Switch::UpdateArgs& update_args)
+{
+  return get<0>(update_args) == ISS_ON;
+}
 
 
 Switch::single_property Switch::new_property(const string& name, const string& label, vtype state)
@@ -44,7 +48,6 @@ void Switch::fill_vector()
 {
     IUFillSwitchVector(&main.m_vector_property, main.m_properties.data(), main.m_properties.size(),
                        UNPACK_IDENTITY(main), main.m_base_options.permissions, m_rule, main.m_base_options.timeout, main.m_base_options.state);
-    send();
 }
 
 void Switch::do_register() const

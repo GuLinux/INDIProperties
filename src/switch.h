@@ -34,6 +34,7 @@ public:
   typedef ISState vtype;
   typedef std::tuple<vtype, std::string> UpdateArgs;
   typedef std::function<bool(std::vector<UpdateArgs>)> OnUpdate;
+  static bool On(const UpdateArgs &update_args);
   
   Switch(Property<Switch> &main, ISRule rule, OnUpdate on_update);
   single_property new_property(const std::string& name, const std::string& label, vtype state);
