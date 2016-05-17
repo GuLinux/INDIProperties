@@ -93,11 +93,6 @@ public:
   std::unordered_map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
   std::unordered_map<key_type, Property<Light>::ptr> &lights() { return m_lights; }
   
-  template<typename T> void autoregister(T &m_map) {
-    typedef typename T::mapped_type V;
-    typedef typename std::pair<key_type, V> P;
-    GuLinux::make_stream(m_map).cp_filter([](const P &p){ return !p.second->is_property_registered(); }).for_each([](const P &p){ p.second->do_register(); });
-  }
   void register_unregistered_properties() {
     autoregister(m_switches);
     autoregister(m_numbers);
@@ -105,7 +100,22 @@ public:
     autoregister(m_blobs);
     autoregister(m_lights);
   }
+  
+  void save_config(FILE *fp) const {
+    save_config_to(m_switches, fp);
+    save_config_to(m_numbers, fp);
+    save_config_to(m_texts, fp);
+    save_config_to(m_blobs, fp);
+  }
 private:
+  template<typename T> void autoregister(T &m_map) {
+    typedef typename T::mapped_type V;
+    typedef typename std::pair<key_type, V> P;
+    GuLinux::make_stream(m_map).cp_filter([](const P &p){ return !p.second->is_property_registered(); }).for_each([](const P &p){ p.second->do_register(); });
+  }
+  template<typename T> void save_config_to(const T &t, FILE *fp) const {
+    GuLinux::make_stream(t).for_each([&](const std::pair<key_type, typename T::mapped_type> &p){ p.second->get().save_config(fp); });
+  }
   std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
   std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
   std::unordered_map<key_type, Property<Text>::ptr> m_texts;

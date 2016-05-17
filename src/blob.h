@@ -40,7 +40,7 @@ public:
   void do_register() const;
   bool update(int sizes[], int blobsizes[], char *blobs[], char *formats[], char *names[], int n);
   void send(const std::string &message = {});
-  
+  void save_config(FILE* fp) const;
 private:
   Property<Blob> &main;
   OnUpdate on_update;

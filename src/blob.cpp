@@ -58,3 +58,7 @@ bool Blob::update(int sizes[], int blobsizes[], char *blobs[], char *formats[], 
 }
 
 
+void Blob::save_config(FILE* fp) const
+{
+  IUSaveConfigBLOB(fp, &main.m_vector_property);
+}

@@ -74,7 +74,7 @@ public:
         return &m_property_wrapper;
     }
     T &get() {
-        return **this;
+        return m_property_wrapper;
     }
 
     T_vector_property &vector_property() {
