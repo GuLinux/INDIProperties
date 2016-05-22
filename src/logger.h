@@ -28,7 +28,7 @@
 #include <ostream>
 #include <iostream>
 namespace INDI {
-namespace GPhoto {
+namespace Utils {
 class Logger {
 public:
   Logger(DefaultDevice *device, const std::string &module = {}) : device{device}, module{module} {}
