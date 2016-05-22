@@ -36,7 +36,7 @@ public:
   typedef std::tuple<vtype, std::string> UpdateArgs;
   typedef std::function<bool(std::vector<UpdateArgs>)> OnUpdate;
   Number(Property<Number> &main, OnUpdate on_update);
-  single_property new_property(const std::string& name, const std::string& label, vtype min, vtype max, vtype step, vtype value, const std::string format = "%d");
+  single_property new_property(const std::string& name, const std::string& label, vtype min, vtype max, vtype step, vtype value, const std::string format = "%f");
   void fill_vector();
   void do_register() const;
   bool update(vtype *values, char *names[], int n);
