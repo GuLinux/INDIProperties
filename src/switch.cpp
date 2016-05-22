@@ -64,7 +64,7 @@ bool Switch::update(Switch::vtype* states, char* names[], int n)
 
 void Switch::send(const string& message)
 {
-    IDSetSwitch(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetSwitch(&main.m_vector_property, message.empty() ? nullptr : message.c_str());
 }
 
 bool filter_on(Switch::Entry s) {

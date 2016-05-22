@@ -42,7 +42,7 @@ void Blob::fill_vector()
 
 void Blob::send(const string& message)
 {
-    IDSetBLOB(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetBLOB(&main.m_vector_property, message.empty() ? nullptr : message.c_str());
 }
 
 void Blob::do_register() const

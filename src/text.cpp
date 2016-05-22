@@ -43,7 +43,7 @@ void Text::fill_vector()
 
 void Text::send(const string& message)
 {
-    IDSetText(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetText(&main.m_vector_property, message.empty() ? nullptr : message.c_str());
 }
 
 void Text::do_register() const

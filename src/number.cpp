@@ -42,7 +42,7 @@ void Number::fill_vector()
 
 void Number::send(const string& message)
 {
-    IDSetNumber(&main.m_vector_property, message.empty() ? message.c_str() : nullptr);
+    IDSetNumber(&main.m_vector_property, message.empty() ? nullptr : message.c_str());
 }
 
 void Number::do_register() const
