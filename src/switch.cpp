@@ -96,5 +96,9 @@ vector< Switch::Entry > Switch::on_switches() const
 {
     SwitchToEntry s2e;
     return GuLinux::make_stream(main.m_properties).transform<vector<Entry>>(s2e).filter(filter_on).get();
+}
 
+void Switch::save_config(FILE* fp) const
+{
+  IUSaveConfigSwitch(fp, &main.m_vector_property);
 }

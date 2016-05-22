@@ -57,3 +57,8 @@ bool Text::update(vtype* values, char* names[], int n)
         return false;
     return IUUpdateText(&main.m_vector_property, const_cast<char**>(values), names, n) == 0;
 }
+
+void Text::save_config(FILE* fp) const
+{
+  return IUSaveConfigText(fp, &main.m_vector_property);
+}

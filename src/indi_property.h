@@ -74,7 +74,7 @@ public:
         return &m_property_wrapper;
     }
     T &get() {
-        return **this;
+        return m_property_wrapper;
     }
 
     T_vector_property &vector_property() {
@@ -109,13 +109,17 @@ public:
             return name == p.name;
         });
     }
+    bool is_property_registered() const { return m_device && m_device->getProperty(m_base_options.name.c_str()); }
+    void do_register() {
+      if(m_device)
+	m_property_wrapper.do_register();
+    }
 private:
     T m_property_wrapper;
     Identity m_base_options;
     std::vector<T_single_property> m_properties;
     T_vector_property m_vector_property;
     INDI::DefaultDevice *m_device = nullptr;
-    bool is_property_registered() const { return m_device && m_device->getProperty(m_base_options.name.c_str()); }
 };
 }
 }

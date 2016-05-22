@@ -38,9 +38,12 @@ public:
   void clear(const key_type &key) { m_map[key].clear(); }
   template<typename ...Args>
   bool update(const std::string &device, const std::string &name, Args ...args) {
-    return std::any_of(m_map.begin(), m_map.end(), [&](const each &each) { return each.second.update(device, name, args...); });
+    return GuLinux::make_stream(m_map).any([&](const each &e) { return e.second.update(device, name, args...); });
   }
 
+  void save_config(FILE *fp) const {
+    GuLinux::make_stream(m_map).for_each([&](const each &e) { return e.second.save_config(fp); });
+  }
 private:
   std::unordered_map<key_type, Properties<sub_key_type>> m_map;
 };

@@ -97,6 +97,12 @@ public:
     return remove([&](const value_type &v) { return ! filter(v); });
   }
   
+  template<typename UnaryFunction> cstream<C> cp_filter(UnaryFunction filter) {
+    C c;
+    std::copy_if(std::begin(_container_ref), std::end(_container_ref), std::inserter(c, std::end(c)), filter);
+    return cstream<C>(std::move(c));
+  }
+  
   template<typename UnaryFunction> cstream<C> &filter_ms(UnaryFunction filter) {
     return remove_ms([&](const value_type &v) { return ! filter(v); });
   }
@@ -181,6 +187,12 @@ template<typename C, typename Add = std::plus<C>> struct join_accumulate {
     return dest == C{} ? source : adder(adder(dest, separator), source);
   }
 };
+
+template<typename A, typename B> struct Pair {
+  static A first(const std::pair<A, B> &p) { return p.first; }
+  static B second(const std::pair<A, B> &p) { return p.second; }
+};
+
 
 template<typename T> cstream<T> make_stream(T &t) {
   return cstream<T>{t};

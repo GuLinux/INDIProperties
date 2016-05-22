@@ -56,3 +56,8 @@ bool Number::update(vtype* values, char* names[], int n)
         return false;
     return IUUpdateNumber(&main.m_vector_property, values, names, n) == 0;
 }
+
+void Number::save_config(FILE* fp) const
+{
+  IUSaveConfigNumber(fp, &main.m_vector_property);
+}

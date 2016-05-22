@@ -41,7 +41,7 @@ public:
   void do_register() const;
   bool update(vtype *values, char *names[], int n);
   void send(const std::string &message = {});
-  
+  void save_config(FILE* fp) const;
 private:
   Property<Number> &main;
   OnUpdate on_update;
