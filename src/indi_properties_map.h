@@ -20,7 +20,7 @@
 #define INDI_PROPERTIES_LIB_INDI_PROPERTIES_MAP
 
 #include <map>
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <functional>
 #include "c++/containers_streams.h"
@@ -45,7 +45,7 @@ public:
     GuLinux::make_stream(m_map).for_each([&](const each &e) { return e.second.save_config(fp); });
   }
 private:
-  std::unordered_map<key_type, Properties<sub_key_type>> m_map;
+  std::map<key_type, Properties<sub_key_type>> m_map;
 };
 }
 }

@@ -20,7 +20,7 @@
 #define INDI_PROPERTIES_LIB_INDI_PROPERTIES
 
 #include <map>
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <functional>
 #include "indi_property.h"
@@ -88,10 +88,10 @@ public:
     return std::any_of(m_blobs.begin(), m_blobs.end(), [&](const std::pair<key_type, Property<Blob>::ptr> &p) { return p.second->update(device, name, sizes, blobsizes, blobs, formats, names, n); });
   }
 
-  std::unordered_map<key_type, Property<Switch>::ptr> &switches() { return m_switches; }
-  std::unordered_map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
-  std::unordered_map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
-  std::unordered_map<key_type, Property<Light>::ptr> &lights() { return m_lights; }
+  std::map<key_type, Property<Switch>::ptr> &switches() { return m_switches; }
+  std::map<key_type, Property<Number>::ptr> &numbers() { return m_numbers; }
+  std::map<key_type, Property<Text>::ptr> &texts() { return m_texts; }
+  std::map<key_type, Property<Light>::ptr> &lights() { return m_lights; }
   
   void register_unregistered_properties() {
     autoregister(m_switches);
@@ -116,11 +116,11 @@ private:
   template<typename T> void save_config_to(const T &t, FILE *fp) const {
     GuLinux::make_stream(t).for_each([&](const std::pair<key_type, typename T::mapped_type> &p){ p.second->get().save_config(fp); });
   }
-  std::unordered_map<key_type, Property<Switch>::ptr> m_switches;
-  std::unordered_map<key_type, Property<Number>::ptr> m_numbers;
-  std::unordered_map<key_type, Property<Text>::ptr> m_texts;
-  std::unordered_map<key_type, Property<Blob>::ptr> m_blobs;
-  std::unordered_map<key_type, Property<Light>::ptr> m_lights;
+  std::map<key_type, Property<Switch>::ptr> m_switches;
+  std::map<key_type, Property<Number>::ptr> m_numbers;
+  std::map<key_type, Property<Text>::ptr> m_texts;
+  std::map<key_type, Property<Blob>::ptr> m_blobs;
+  std::map<key_type, Property<Light>::ptr> m_lights;
 };
 }
 }
