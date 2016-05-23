@@ -115,11 +115,11 @@ public:
 	m_property_wrapper.do_register();
     }
 private:
+    INDI::DefaultDevice *m_device = nullptr;
     T m_property_wrapper;
     Identity m_base_options;
     std::vector<T_single_property> m_properties;
     T_vector_property m_vector_property;
-    INDI::DefaultDevice *m_device = nullptr;
 };
 }
 }
