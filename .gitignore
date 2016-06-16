@@ -3,7 +3,6 @@ build*
 CMakeLists.txt.user
 gulinux-commons/CImg/
 gulinux-commons/Qt/
-gulinux-commons/cmake/
 gulinux-commons/shell/
 gulinux-commons/Wt/
 
