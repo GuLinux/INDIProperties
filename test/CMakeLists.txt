@@ -1,24 +1,13 @@
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/CMakeLists.txt")
+  include(add_gtest)
   message("Found googletest, enabling testing")
   add_subdirectory(googletest)
   
-  add_executable(switch_test switch_test.cpp)
-  target_link_libraries(switch_test indi_properties gtest_main indidriver)
-  add_test(switch_test switch_test)
-  
-  add_executable(number_test number_test.cpp)
-  target_link_libraries(number_test indi_properties gtest_main indidriver)
-  add_test(number_test number_test)
-
-  add_executable(text_test text_test.cpp)
-  target_link_libraries(text_test indi_properties gtest_main indidriver)
-  add_test(text_test text_test)
-
-  add_executable(properties_test properties_test.cpp)
-  target_link_libraries(properties_test indi_properties gtest_main indidriver)
-  add_test(properties_test properties_test)
-
-  add_executable(properties_map_test properties_map_test.cpp)
-  target_link_libraries(properties_map_test indi_properties gtest_main indidriver)
-  add_test(properties_map_test properties_map_test)
+  add_gtest(NAME switch_test SOURCES switch_test.cpp TYPE unit TARGET_LINK_LIBRARIES indi_properties indidriver)
+  add_gtest(NAME number_test SOURCES number_test.cpp TYPE unit TARGET_LINK_LIBRARIES indi_properties indidriver)
+  add_gtest(NAME text_test SOURCES text_test.cpp TYPE unit TARGET_LINK_LIBRARIES indi_properties indidriver)
+  add_gtest(NAME properties_test SOURCES properties_test.cpp TYPE unit TARGET_LINK_LIBRARIES indi_properties indidriver)
+  add_gtest(NAME properties_map_test SOURCES properties_map_test.cpp TYPE unit TARGET_LINK_LIBRARIES indi_properties indidriver)
+else(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/CMakeLists.txt")
+  message(WARNING "Testing enabled but gtest not found")
 endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/CMakeLists.txt")
